@@ -1,0 +1,6 @@
+{
+  "name": "PyDuo",
+  "description": "AI/ML Learning Platform (Duolingo-Style Gamified) teaching Python, ML, and Deep Learning with interactive sandboxes.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
