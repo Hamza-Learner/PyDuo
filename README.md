@@ -1,4 +1,4 @@
-# 🐍 PyDuo — Learn Python & AI, Duolingo-Style!
+﻿# ðŸ PyDuo â€” Learn Python & AI, Duolingo-Style!
 
 > **Learn Python, Machine Learning, and Deep Learning interactively with Slythe, your friendly animated snake mentor!**
 
@@ -6,9 +6,9 @@ PyDuo is a gamified, interactive, and community-first full-stack learning platfo
 
 ---
 
-# ✨ Core Features
+# âœ¨ Core Features
 
-## 🐍 Slythe — The Animated Mascot
+## ðŸ Slythe â€” The Animated Mascot
 
 - Animated SVG/Motion mascot that responds dynamically to your performance.
 - Smiles when you write correct code.
@@ -18,25 +18,25 @@ PyDuo is a gamified, interactive, and community-first full-stack learning platfo
 
 ---
 
-## 🎮 Gamified Learning Path
+## ðŸŽ® Gamified Learning Path
 
-- 📚 Progressive Modules
+- ðŸ“š Progressive Modules
   - Learn step-by-step from Python basics to Deep Learning.
 
-- ⭐ XP & Levels
+- â­ XP & Levels
   - Earn XP after every lesson and coding exercise.
 
-- ❤️ Hearts & Daily Streaks
+- â¤ï¸ Hearts & Daily Streaks
   - Maintain your learning streak.
   - Lose hearts on wrong submissions.
   - Refill hearts through practice.
 
-- 🎯 Daily Quests
+- ðŸŽ¯ Daily Quests
   - Complete special challenges to earn bonus XP and rewards.
 
 ---
 
-## 💻 Code Darbar (Interactive Playground)
+## ðŸ’» Code Darbar (Interactive Playground)
 
 Practice Python directly inside your browser.
 
@@ -57,7 +57,7 @@ Templates include:
 
 ---
 
-## 🧠 Slythe AI Mentor
+## ðŸ§  Slythe AI Mentor
 
 Need help?
 
@@ -80,7 +80,7 @@ Quick buttons include:
 
 ---
 
-## 📂 Capstone Projects & Live Verification
+## ðŸ“‚ Capstone Projects & Live Verification
 
 Build real-world projects like:
 
@@ -97,7 +97,7 @@ Every project includes:
 
 ---
 
-# 🛠️ Technical Architecture
+# ðŸ› ï¸ Technical Architecture
 
 ## Frontend
 
@@ -120,9 +120,9 @@ Every project includes:
 
 ---
 
-# 🚀 Local Installation
+# ðŸš€ Local Installation
 
-## 1️⃣ Prerequisites
+## 1ï¸âƒ£ Prerequisites
 
 Install:
 
@@ -130,7 +130,7 @@ Install:
 
 ---
 
-## 2️⃣ Clone or Extract
+## 2ï¸âƒ£ Clone or Extract
 
 ```bash
 cd pyduo
@@ -138,7 +138,7 @@ cd pyduo
 
 ---
 
-## 3️⃣ Install Dependencies
+## 3ï¸âƒ£ Install Dependencies
 
 ```bash
 npm install
@@ -146,7 +146,7 @@ npm install
 
 ---
 
-## 4️⃣ Configure Environment
+## 4ï¸âƒ£ Configure Environment
 
 Create a `.env` file in the project root.
 
@@ -156,7 +156,7 @@ GEMINI_API_KEY=your_gemini_api_key_here
 
 ---
 
-## 5️⃣ Run Development Server
+## 5ï¸âƒ£ Run Development Server
 
 ```bash
 npm run dev
@@ -170,7 +170,7 @@ http://localhost:3000
 
 ---
 
-# 📦 Production Build
+# ðŸ“¦ Production Build
 
 Build the application:
 
@@ -186,9 +186,9 @@ npm run start
 
 ---
 
-# 📱 Build Android APK (Capacitor)
+# ðŸ“± Build Android APK (Capacitor)
 
-## Step 1 — Install Capacitor
+## Step 1 â€” Install Capacitor
 
 ```bash
 npm install @capacitor/core @capacitor/cli
@@ -196,7 +196,7 @@ npm install @capacitor/core @capacitor/cli
 
 ---
 
-## Step 2 — Initialize Capacitor
+## Step 2 â€” Initialize Capacitor
 
 ```bash
 npx cap init
@@ -224,7 +224,7 @@ webDir = dist
 
 ---
 
-## Step 3 — Install Android Platform
+## Step 3 â€” Install Android Platform
 
 ```bash
 npm install @capacitor/android
@@ -234,7 +234,7 @@ npx cap add android
 
 ---
 
-## Step 4 — Build & Sync
+## Step 4 â€” Build & Sync
 
 ```bash
 npm run build
@@ -244,7 +244,7 @@ npx cap sync
 
 ---
 
-## Step 5 — Open Android Studio
+## Step 5 â€” Open Android Studio
 
 ```bash
 npx cap open android
@@ -252,15 +252,15 @@ npx cap open android
 
 ---
 
-## Step 6 — Build APK
+## Step 6 â€” Build APK
 
 Inside Android Studio:
 
 ```
 Build
-    ↓
+    â†“
 Build Bundle(s) / APK(s)
-    ↓
+    â†“
 Build APK(s)
 ```
 
@@ -287,27 +287,27 @@ Transfer it to your Android phone and install.
 ---
 
 
-# 🌟 Highlights
+# ðŸŒŸ Highlights
 
-- 🐍 Animated Snake Mentor
-- 🎮 Duolingo-style Learning
-- 🧠 AI Coding Mentor
-- 💻 Browser Python Playground
-- 🏆 XP, Levels & Streaks
-- ❤️ Hearts System
-- 🎯 Daily Quests
-- 📂 Capstone Projects
-- 📱 Android APK Support
-- 🚀 Fast React + Vite Stack
-- 🔒 Secure AI Backend
+- ðŸ Animated Snake Mentor
+- ðŸŽ® Duolingo-style Learning
+- ðŸ§  AI Coding Mentor
+- ðŸ’» Browser Python Playground
+- ðŸ† XP, Levels & Streaks
+- â¤ï¸ Hearts System
+- ðŸŽ¯ Daily Quests
+- ðŸ“‚ Capstone Projects
+- ðŸ“± Android APK Support
+- ðŸš€ Fast React + Vite Stack
+- ðŸ”’ Secure AI Backend
 
 ---
 
 <div align="center">
 
-# 🐍 Happy Coding with PyDuo!
+# ðŸ Happy Coding with PyDuo!
 
-**Developed with ❤️ for students worldwide.**
+**Developed with â¤ï¸ for students worldwide.**
 
 Practice daily.
 
@@ -315,6 +315,6 @@ Code beautifully.
 
 Master Python.
 
-⭐ If you like this project, don't forget to star the repository!
+â­ If you like this project, don't forget to star the repository!
 
-</div>
+
