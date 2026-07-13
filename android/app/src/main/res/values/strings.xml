@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">PyDuo</string>
+    <string name="title_activity_main">PyDuo</string>
+    <string name="package_name">com.learning.pyduo</string>
+    <string name="custom_url_scheme">com.learning.pyduo</string>
+</resources>

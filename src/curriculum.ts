@@ -123,16 +123,301 @@ export const modules: Module[] = [
           }
         ]
       },
-      { id: 'm1-l3', title: 'Functions & Scope', description: 'Define reusable code with parameters and return values.', xpReward: 100, exercises: [] },
-      { id: 'm1-l4', title: 'Lists & Tuples', description: 'Master indexed collections and immutable sequences.', xpReward: 100, exercises: [] },
-      { id: 'm1-l5', title: 'Dictionaries & Sets', description: 'Store values in key-value pairs and fast lookups.', xpReward: 100, exercises: [] },
-      { id: 'm1-l6', title: 'Object-Oriented Python', description: 'Create custom classes, attributes, methods, and inheritance.', xpReward: 100, exercises: [] },
-      { id: 'm1-l7', title: 'File Input/Output', description: 'Read and write local text and CSV files seamlessly.', xpReward: 100, exercises: [] },
-      { id: 'm1-l8', title: 'Error & Exception Handling', description: 'Use try-except blocks to catch runtime bugs gracefully.', xpReward: 100, exercises: [] },
-      { id: 'm1-l9', title: 'JSON Serialization', description: 'Convert Python dictionaries to JSON and back.', xpReward: 100, exercises: [] },
-      { id: 'm1-l10', title: 'Testing with Pytest', description: 'Write unit tests to assert code correctness.', xpReward: 100, exercises: [] },
-      { id: 'm1-l11', title: 'Advanced Iterators & Generators', description: 'Use yield and range generators for memory efficiency.', xpReward: 100, exercises: [] },
-      { id: 'm1-l12', title: 'CLI Game Loops & State Machines', description: 'Learn how variables maintain state in a classic CLI loop.', xpReward: 100, exercises: [] }
+      {
+        id: 'm1-l3',
+        title: 'Functions & Scope',
+        description: 'Define reusable code with parameters and return values.',
+        xpReward: 100,
+        exercises: [
+          {
+            id: 'm1-l3-e1',
+            type: 'MCQ',
+            question: 'How do you define a function in Python?',
+            points: 30,
+            romanHindiHint: 'Bhai, Python me function banane ke liye "def" keyword ka use kiya jata hai!',
+            options: [
+              'function myFunc():',
+              'def myFunc():',
+              'void myFunc():',
+              'define myFunc():'
+            ],
+            correctIndex: 1
+          },
+          {
+            id: 'm1-l3-e2',
+            type: 'CODE',
+            question: 'Define a function named `greet_bhai` that takes a name and returns it as a string with a greeting: f"Hello {name}, kaise ho bhai?".',
+            points: 50,
+            romanHindiHint: 'def greet_bhai(name): likho aur return f"Hello {name}, kaise ho bhai?" kar do!',
+            initialCode: '# Define the greet_bhai function below\n',
+            testCases: [
+              {
+                expectedOutput: 'Hello Amit, kaise ho bhai?',
+                description: 'Verify calling greet_bhai("Amit")'
+              }
+            ],
+            solutionCode: 'def greet_bhai(name):\n    return f"Hello {name}, kaise ho bhai?"\n\nprint(greet_bhai("Amit"))'
+          }
+        ]
+      },
+      {
+        id: 'm1-l4',
+        title: 'Lists & Tuples',
+        description: 'Master indexed collections and immutable sequences.',
+        xpReward: 100,
+        exercises: [
+          {
+            id: 'm1-l4-e1',
+            type: 'MCQ',
+            question: 'Which of the following creates a read-only, immutable Tuple in Python?',
+            points: 30,
+            romanHindiHint: 'Bhai, round brackets () use hote hain tuples ke liye aur unhe change nahi kiya ja sakta!',
+            options: [
+              'my_data = [1, 2, 3]',
+              'my_data = {1, 2, 3}',
+              'my_data = (1, 2, 3)',
+              'my_data = "1, 2, 3"'
+            ],
+            correctIndex: 2
+          },
+          {
+            id: 'm1-l4-e2',
+            type: 'PREDICT',
+            question: 'Predict the output of list slicing: items = [10, 20, 30, 40], what is printed by print(items[1:3])?',
+            points: 40,
+            romanHindiHint: 'Slicing me index 1 se start hoga aur index 3 (exclusive) tak chalega. Matlab index 1 aur 2!',
+            code: 'items = [10, 20, 30, 40]\nprint(items[1:3])',
+            options: [
+              '[10, 20]',
+              '[20, 30]',
+              '[20, 30, 40]',
+              'Error'
+            ],
+            correctAnswer: '[20, 30]'
+          }
+        ]
+      },
+      {
+        id: 'm1-l5',
+        title: 'Dictionaries & Sets',
+        description: 'Store values in key-value pairs and fast lookups.',
+        xpReward: 100,
+        exercises: [
+          {
+            id: 'm1-l5-e1',
+            type: 'MCQ',
+            question: 'How do you get the value for key "name" from a dictionary `user`?',
+            points: 30,
+            romanHindiHint: 'Square brackets [] use karke dabba ke andar key name string dalo.',
+            options: [
+              'user.name',
+              'user["name"]',
+              'user->name',
+              'user.get_value("name")'
+            ],
+            correctIndex: 1
+          },
+          {
+            id: 'm1-l5-e2',
+            type: 'PREDICT',
+            question: 'What is the output when key is missing but we use the `.get(key, default)` method?',
+            points: 40,
+            romanHindiHint: 'Bhai, agar dictionary me key nahi milti, toh .get() default value de deta hai bina error ke!',
+            code: 'marks = {"Math": 90}\nprint(marks.get("Science", 80))',
+            options: [
+              '90',
+              'None',
+              '80',
+              'Error'
+            ],
+            correctAnswer: '80'
+          }
+        ]
+      },
+      {
+        id: 'm1-l6',
+        title: 'Object-Oriented Python',
+        description: 'Create custom classes, attributes, methods, and inheritance.',
+        xpReward: 100,
+        exercises: [
+          {
+            id: 'm1-l6-e1',
+            type: 'MCQ',
+            question: 'In Python, what is the default constructor method name for classes?',
+            points: 30,
+            romanHindiHint: 'Double underscore init double underscore! dunder init bolte hain ise!',
+            options: [
+              '__init__',
+              'constructor',
+              'def class()',
+              '__new__'
+            ],
+            correctIndex: 0
+          },
+          {
+            id: 'm1-l6-e2',
+            type: 'CODE',
+            question: 'Create a simple Python class `Car` that initialized with a `model` attribute, and has a method `start` that returns f"Starting {model}!".',
+            points: 50,
+            romanHindiHint: 'class Car: declare karo, __init__(self, model) banake self.model set karo, aur start(self) method se string return karo!',
+            initialCode: '# Write Car class below\n',
+            testCases: [
+              {
+                expectedOutput: 'Starting Tesla!',
+                description: 'Instantiate Car("Tesla") and call start()'
+              }
+            ],
+            solutionCode: 'class Car:\n    def __init__(self, model):\n        self.model = model\n    def start(self):\n        return f"Starting {self.model}!"\n\nc = Car("Tesla")\nprint(c.start())'
+          }
+        ]
+      },
+      {
+        id: 'm1-l7',
+        title: 'File Input/Output',
+        description: 'Read and write local text and CSV files seamlessly.',
+        xpReward: 100,
+        exercises: [
+          {
+            id: 'm1-l7-e1',
+            type: 'MCQ',
+            question: 'Which statement ensures files are closed automatically even if an error occurs during processing?',
+            points: 30,
+            romanHindiHint: 'with keyword context manager ke roop me use hota hai, automatic close ke liye!',
+            options: [
+              'open_file("data.txt")',
+              'with open("data.txt") as f:',
+              'file.open().auto_close()',
+              'try-close open("data.txt")'
+            ],
+            correctIndex: 1
+          }
+        ]
+      },
+      {
+        id: 'm1-l8',
+        title: 'Error & Exception Handling',
+        description: 'Use try-except blocks to catch runtime bugs gracefully.',
+        xpReward: 100,
+        exercises: [
+          {
+            id: 'm1-l8-e1',
+            type: 'MCQ',
+            question: 'Which blocks are used to catch and handle ZeroDivisionError or other runtime exceptions?',
+            points: 30,
+            romanHindiHint: 'Bhai, try-except block se crash bacha sakte hain!',
+            options: [
+              'try-catch',
+              'try-except',
+              'throw-except',
+              'attempt-error'
+            ],
+            correctIndex: 1
+          },
+          {
+            id: 'm1-l8-e2',
+            type: 'PREDICT',
+            question: 'Predict the final output of the following try-except-finally block:',
+            points: 40,
+            romanHindiHint: 'finally block hamesha chalega chahe error aaye ya na aaye!',
+            code: 'try:\n    x = 10 / 0\nexcept ZeroDivisionError:\n    print("caught")\nfinally:\n    print("always")',
+            options: [
+              'caught',
+              'always',
+              'caught\\nalways',
+              'Error'
+            ],
+            correctAnswer: 'caught\nalways'
+          }
+        ]
+      },
+      {
+        id: 'm1-l9',
+        title: 'JSON Serialization',
+        description: 'Convert Python dictionaries to JSON and back.',
+        xpReward: 100,
+        exercises: [
+          {
+            id: 'm1-l9-e1',
+            type: 'MCQ',
+            question: 'Which function in python`s standard `json` module turns a dictionary into a serialized string?',
+            points: 30,
+            romanHindiHint: 'dumps stands for "dump string"!',
+            options: [
+              'json.parse()',
+              'json.dumps()',
+              'json.loads()',
+              'json.stringify()'
+            ],
+            correctIndex: 1
+          }
+        ]
+      },
+      {
+        id: 'm1-l10',
+        title: 'Testing with Pytest',
+        description: 'Write unit tests to assert code correctness.',
+        xpReward: 100,
+        exercises: [
+          {
+            id: 'm1-l10-e1',
+            type: 'MCQ',
+            question: 'Which keyword is native to Python and widely used by Pytest to check if test outcomes match expectations?',
+            points: 30,
+            romanHindiHint: 'assert keyword se checks lagaye jate hain!',
+            options: [
+              'check',
+              'assert',
+              'verify',
+              'expect'
+            ],
+            correctIndex: 1
+          }
+        ]
+      },
+      {
+        id: 'm1-l11',
+        title: 'Advanced Iterators & Generators',
+        description: 'Use yield and range generators for memory efficiency.',
+        xpReward: 100,
+        exercises: [
+          {
+            id: 'm1-l11-e1',
+            type: 'MCQ',
+            question: 'What keyword does a Python generator function use to produce values incrementally without destroying local state?',
+            points: 30,
+            romanHindiHint: 'yield keyword memory save karne me kaam aata hai!',
+            options: [
+              'return',
+              'yield',
+              'produce',
+              'emit'
+            ],
+            correctIndex: 1
+          }
+        ]
+      },
+      {
+        id: 'm1-l12',
+        title: 'CLI Game Loops & State Machines',
+        description: 'Learn how variables maintain state in a classic CLI loop.',
+        xpReward: 100,
+        exercises: [
+          {
+            id: 'm1-l12-e1',
+            type: 'MCQ',
+            question: 'Which standard structure is standard for running an interactive game loop indefinitely until exit?',
+            points: 30,
+            romanHindiHint: 'while True loop game loop ka heartbeat hota hai!',
+            options: [
+              'while True:',
+              'for ever:',
+              'loop continuous:',
+              'repeat indefinitely:'
+            ],
+            correctIndex: 0
+          }
+        ]
+      }
     ],
     capstone: {
       id: 'm1-cap',

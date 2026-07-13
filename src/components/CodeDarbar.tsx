@@ -22,6 +22,60 @@ import {
   X
 } from 'lucide-react';
 import { Settings } from '../types';
+import { fetchHint, type ProviderConfig } from '../utils/api';
+
+// Duolingo-style haptic feedback
+const playHaptic = (type: 'tick' | 'pop' | 'success' | 'error') => {
+  if (typeof window === 'undefined') return;
+  try {
+    const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
+    if (!AudioContextClass) return;
+    const ctx = new AudioContextClass();
+    const now = ctx.currentTime;
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    if (type === 'tick') {
+      osc.frequency.setValueAtTime(800, now);
+      osc.frequency.exponentialRampToValueAtTime(400, now + 0.03);
+      gain.gain.setValueAtTime(0.04, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.03);
+      osc.start(now);
+      osc.stop(now + 0.04);
+    } else if (type === 'pop') {
+      osc.frequency.setValueAtTime(160, now);
+      osc.frequency.exponentialRampToValueAtTime(400, now + 0.06);
+      gain.gain.setValueAtTime(0.08, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.06);
+      osc.start(now);
+      osc.stop(now + 0.07);
+    } else if (type === 'success') {
+      [261.63, 329.63, 392, 523.25].forEach((freq, i) => {
+        const o = ctx.createOscillator();
+        const g = ctx.createGain();
+        o.connect(g); g.connect(ctx.destination);
+        o.frequency.value = freq;
+        g.gain.setValueAtTime(0.08, now + i * 0.05);
+        g.gain.exponentialRampToValueAtTime(0.001, now + i * 0.05 + 0.15);
+        o.start(now + i * 0.05);
+        o.stop(now + i * 0.05 + 0.2);
+      });
+    } else if (type === 'error') {
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(200, now);
+      osc.frequency.linearRampToValueAtTime(80, now + 0.12);
+      gain.gain.setValueAtTime(0.15, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
+      osc.start(now);
+      osc.stop(now + 0.14);
+    }
+    if (navigator.vibrate) {
+      const patterns = { tick: [5], pop: [10, 5, 10], success: [15, 10, 15], error: [30, 20] };
+      navigator.vibrate(patterns[type]);
+    }
+  } catch (e) {}
+};
 
 interface CodeDarbarProps {
   settings: Settings;
@@ -316,6 +370,7 @@ export const CodeDarbar: React.FC<CodeDarbarProps> = ({
   };
 
   const executePython = async () => {
+    playHaptic('pop');
     setIsEvaluating(true);
     setOutput('');
 
@@ -375,16 +430,19 @@ sys.stderr = io.StringIO()
   };
 
   const handleClearConsole = () => {
+    playHaptic('tick');
     setOutput('');
   };
 
   const handleResetEditor = () => {
+    playHaptic('tick');
     setCode(TEMPLATES.find(t => t.id === selectedTemplateId)?.code || TEMPLATES[0].code);
     setOutput('');
   };
 
   // Submit tutor query to API gateway with context
   const askSlytheBhaiTutor = async (customPrompt?: string) => {
+    playHaptic('pop');
     const queryText = customPrompt || tutorInput;
     if (!queryText.trim()) return;
 
@@ -400,53 +458,26 @@ sys.stderr = io.StringIO()
       const userApiKey = (settings as any)?.[keyField] || '';
       const userBaseUrl = (settings as any)?.[urlField] || '';
 
-      const exerciseContextPrompt = `
-You are Slythe Bhai (from PyDuo), a funny, helpful, energetic Hinglish Coding Tutor who loves to support students!
-The user is coding freely in their playground editor called 'Code Darbar'.
-Here is the code the user has written in the editor:
-\`\`\`python
-${code}
-\`\`\`
+      const exerciseContext = {
+        question: queryText,
+        hint: output || '[No output or code has not been run yet]',
+        code: code
+      };
 
-Here is what the output of this code was in the terminal:
-\`\`\`
-${output || '[No output or code has not been run yet]'}
-\`\`\`
+      const providerConfig: ProviderConfig = {
+        aiProvider: provider,
+        apiKey: userApiKey,
+        baseUrl: userBaseUrl,
+        selectedModel: settings?.selectedModel
+      };
 
-Explain, debug, optimization or respond to the user's question with funny, witty, and deeply pedagogical Hinglish tips. 
-User's direct question: "${queryText}"
-Keep the tone energetic ("Arre bhai!", "Shabash!", "Oye hoye!"), clear, encouraging, and provide code blocks only if they are correct python and directly solve the problem.
-`;
-
-      const response = await fetch('/api/hint', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          question: queryText,
-          exerciseContext: exerciseContextPrompt,
-          providerConfig: {
-            aiProvider: provider,
-            apiKey: userApiKey,
-            baseUrl: userBaseUrl,
-            selectedModel: settings?.selectedModel
-          }
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error('API request failed');
-      }
-
-      const data = await response.json();
-      const answer = data.hint || "Bhai lagta hai server thoda busy hai, dobara try kar!";
+      const answer = await fetchHint(queryText, exerciseContext, providerConfig);
       
       setTutorMessages(prev => [...prev, { sender: 'tutor', text: answer }]);
     } catch (error) {
       setTutorMessages(prev => [...prev, { 
         sender: 'tutor', 
-        text: "Arre yaara! Kuch error aa gaya. Apna API Key settings page par check karo, and ensure backend proxy server responsive hai!" 
+        text: "Arre yaara! Kuch error aa gaya. Apna API Key settings page par check karo!" 
       }]);
     } finally {
       setIsTutorLoading(false);
@@ -454,12 +485,13 @@ Keep the tone energetic ("Arre bhai!", "Shabash!", "Oye hoye!"), clear, encourag
   };
 
   const handleQuickQuestion = (question: string) => {
+    playHaptic('tick');
     setIsTutorOpen(true);
     askSlytheBhaiTutor(question);
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-6 select-none flex flex-col h-[calc(100vh-140px)] min-h-[500px]">
+    <div className="max-w-7xl mx-auto px-4 py-6 select-none flex flex-col min-h-[500px]">
       
       {/* Header Info */}
       <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-4 select-none">
@@ -517,10 +549,10 @@ Keep the tone energetic ("Arre bhai!", "Shabash!", "Oye hoye!"), clear, encourag
       </div>
 
       {/* Main Workspace Workspace */}
-      <div className="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-5 min-h-0">
+      <div className="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-5 lg:min-h-0">
         
         {/* Code Editor and Console Panel */}
-        <div className="lg:col-span-8 flex flex-col min-h-0 bg-slate-950 rounded-2xl border border-slate-200 dark:border-slate-850 overflow-hidden shadow-xl">
+        <div className="lg:col-span-8 flex flex-col min-h-[400px] lg:min-h-0 bg-slate-950 rounded-2xl border border-slate-200 dark:border-slate-850 overflow-hidden shadow-xl">
           
           {/* Editor Header Bar */}
           <div className="flex items-center justify-between px-4 py-2.5 bg-slate-900/90 border-b border-slate-800">
@@ -633,7 +665,7 @@ Keep the tone energetic ("Arre bhai!", "Shabash!", "Oye hoye!"), clear, encourag
         </div>
 
         {/* Sidebar / Quick Actions & Tutor Pane */}
-        <div className="lg:col-span-4 flex flex-col min-h-0 gap-4">
+        <div className="lg:col-span-4 flex flex-col gap-4">
           
           {/* Quick Suggestions list */}
           <div className="bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-200 dark:border-slate-850 flex flex-col gap-3 select-none">
@@ -667,8 +699,8 @@ Keep the tone energetic ("Arre bhai!", "Shabash!", "Oye hoye!"), clear, encourag
             </div>
           </div>
 
-          {/* Dynamic Slythe Bhai AI Tutor Chat Module */}
-          <div className="flex-1 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-850 overflow-hidden flex flex-col min-h-0 shadow-md">
+          {/* Dynamic Slythe Bhai AI Tutor Chat Module - flexible auto-height */}
+          <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-850 overflow-hidden flex flex-col shadow-md lg:min-h-0 lg:flex-auto">
             
             {/* Tutor Header */}
             <div className="bg-slate-50 dark:bg-slate-900/40 border-b border-slate-150 dark:border-slate-850 px-4 py-3 flex items-center justify-between">
@@ -692,15 +724,15 @@ Keep the tone energetic ("Arre bhai!", "Shabash!", "Oye hoye!"), clear, encourag
               )}
             </div>
 
-            {/* Chat message frame */}
-            <div className="flex-1 overflow-y-auto p-4 flex flex-col gap-3 min-h-0 select-text">
+            {/* Chat message frame - flexible auto-resize based on content */}
+            <div className="overflow-y-auto p-4 flex flex-col gap-3 min-h-[180px] lg:min-h-0 lg:flex-auto select-text max-h-[60vh] lg:max-h-none">
               {tutorMessages.map((msg, idx) => (
                 <div 
                   key={idx} 
-                  className={`max-w-[85%] rounded-2xl px-3 py-2 text-xs leading-relaxed ${
+                  className={`max-w-[90%] sm:max-w-[85%] rounded-2xl px-3 py-2 text-xs leading-relaxed whitespace-pre-wrap break-words ${
                     msg.sender === 'user' 
                       ? 'bg-[#306998] text-white self-end rounded-tr-none font-medium' 
-                      : 'bg-slate-100 dark:bg-slate-950 text-slate-700 dark:text-slate-300 self-start rounded-tl-none border border-slate-150 dark:border-slate-800 whitespace-pre-wrap font-sans'
+                      : 'bg-slate-100 dark:bg-slate-950 text-slate-700 dark:text-slate-300 self-start rounded-tl-none border border-slate-150 dark:border-slate-800 font-sans'
                   }`}
                 >
                   {msg.text}

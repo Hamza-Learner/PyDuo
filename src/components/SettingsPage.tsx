@@ -1,6 +1,7 @@
 import React, { useRef, useState } from 'react';
 import { Settings, Volume2, VolumeX, Eye, Sparkles, Download, Upload, ShieldAlert, Check, Key, Cpu, Globe, EyeOff, Wifi } from 'lucide-react';
 import { Settings as SettingsType } from '../types';
+import { fetchModels, type ProviderConfig } from '../utils/api';
 
 interface SettingsPageProps {
   settings: SettingsType;
@@ -130,7 +131,7 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
     });
   };
 
-  // Real fetch from /api/models backend proxy to bypass CORS
+  // Real fetch from provider API directly (bypass CORS via Capacitor HTTP or direct fetch)
   const fetchAvailableModels = async () => {
     const currentKey = settings[`${currentProvider}ApiKey` as keyof SettingsType];
     const customBaseUrl = settings[`${currentProvider}BaseUrl` as keyof SettingsType];
@@ -144,36 +145,21 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
 
     setIsFetchingModels(true);
     setFetchStatus('loading');
-    setFetchMessage(`Connecting securely to ${currentProvider === 'opencode_zen' ? 'Opencode Zen' : currentProvider.toUpperCase()} secure API gateway and synchronizing model versions...`);
+    setFetchMessage(`Connecting securely to ${currentProvider === 'opencode_zen' ? 'Opencode Zen' : currentProvider.toUpperCase()} API and synchronizing model versions...`);
 
     try {
       if (!navigator.onLine) {
         throw new Error('Arre bhai! Internet connect karo pehle! AI model sync ke liye online hona zaroori hai.');
       }
 
-      const response = await fetch('/api/models', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          provider: currentProvider,
-          apiKey: currentKey,
-          baseUrl: customBaseUrl,
-        }),
-      });
+      const providerConfig: ProviderConfig = {
+        aiProvider: currentProvider,
+        apiKey: currentKey as string,
+        baseUrl: customBaseUrl as string,
+        selectedModel: settings.selectedModel as string,
+      };
 
-      if (!response.ok) {
-        const errData = await response.json().catch(() => ({}));
-        throw new Error(errData.error || `Server returned status ${response.status}`);
-      }
-
-      const data = await response.json();
-      const models = data.models || [];
-
-      if (models.length === 0) {
-        throw new Error(`Bhai! API successfully connect ho gayi par usne koi models return nahi kiya.`);
-      }
+      const models = await fetchModels(providerConfig);
 
       setFetchedModels(models);
       setHasFetched(true);
@@ -185,7 +171,7 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
       });
 
       setFetchStatus('success');
-      setFetchMessage(`Shabash! ${models.length} active models fetched successfully for ${currentProvider === 'opencode_zen' ? 'OPENCODE ZEN' : currentProvider.toUpperCase()} from the secure API gateway.`);
+      setFetchMessage(`Shabash! ${models.length} active models fetched successfully for ${currentProvider === 'opencode_zen' ? 'OPENCODE ZEN' : currentProvider.toUpperCase()} directly from the provider API.`);
     } catch (err: any) {
       setFetchStatus('error');
       setFetchMessage(err.message || 'Kuch toh gadbad hai! API Key aur Base URL sahi se check karo yaar.');

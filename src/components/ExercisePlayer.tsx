@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { ArrowLeft, Heart, Zap, HelpCircle, MessageSquare, Check, X, ShieldAlert, Sparkles, Send, BookOpen, ArrowRight, Code } from 'lucide-react';
+import { ArrowLeft, Heart, Zap, HelpCircle, MessageSquare, Check, X, ShieldAlert, Sparkles, Send, BookOpen, ArrowRight, Code, BrainCircuit } from 'lucide-react';
 import { Exercise, Lesson, SnakeState, Settings as SettingsType } from '../types';
+import { fetchHint, type ProviderConfig } from '../utils/api';
 import { SnakeMascot } from './SnakeMascot';
 import { CodeSandbox } from './CodeSandbox';
 import { motion, AnimatePresence } from 'motion/react';
+import { LESSON_CONCEPTS, getFallbackConcept, type ConceptDetail } from '../concepts';
 
 interface ExercisePlayerProps {
   lesson: Lesson;
@@ -14,145 +16,6 @@ interface ExercisePlayerProps {
   onLoseHeart: () => void;
   onGainXP: (amount: number) => void;
 }
-
-interface ConceptDetail {
-  conceptTitle: string;
-  simpleExplanation: string;
-  analogyTitle: string;
-  analogyContent: string;
-  pythonExampleCode: string;
-  isAdvanceLevel: boolean;
-}
-
-const LESSON_CONCEPTS: Record<string, ConceptDetail> = {
-  'm1-l1': {
-    conceptTitle: 'Variables & Data Types (Computer ke storage dabbe!)',
-    simpleExplanation: 'Bhai, variables aur kuch nahi balki computer memory me bane chote dabbe (boxes) hote hain jahan tum apna data store karte ho. Jaise kitchen me dabbe par "Namkeen" likha hota hai aur andar Sev hoti hai, waise hi programming me variables hote hain!',
-    analogyTitle: 'Kitchen Dabba Analogy 🍱',
-    analogyContent: 'Dabbe ka naam hai: x, aur andar rakha hai number 5. Python me isko simple x = 5 likhte hain. Tumhe C++ ya Java ki tarah "int x = 5" nahi likhna padta! Python intelligent hai, wo apne aap samajh jata hai!',
-    pythonExampleCode: `# Simple assignment in Python
-namkeen = "Sev" # String dabba
-age = 18       # Integer dabba
-height = 5.9   # Float dabba
-
-print(namkeen) # Prints: Sev
-print(age)     # Prints: 18`,
-    isAdvanceLevel: false,
-  },
-  'm1-l2': {
-    conceptTitle: 'If-Else & Loops (Decisions & Repeat!)',
-    simpleExplanation: 'If-Else se hum decision lete hain, jaise: "Agar dhoop hai toh sunglasses pehno, nahi toh simple chashma". Aur Loops ka matlab hai ek hi kaam ko baar-baar repeat karna jab tak ki koi condition poori na ho jaye!',
-    analogyTitle: 'Traffic Signal & Roti Belna 🚦',
-    analogyContent: 'If-Else is like: Signal agar RED hai toh ruko, GREEN hai toh jao! Loop is like: Jab tak mummy ne 5 chapatis nahi banayi, tab tak roti belte raho! Python me loop for aur while se chalti hai.',
-    pythonExampleCode: `# Decision Making (If-Else)
-traffic_light = "GREEN"
-if traffic_light == "RED":
-    print("Ruko bhai!")
-else:
-    print("Chalo bhai! Green light hai!")
-
-# Looping 5 times (For Loop)
-for roti in range(1, 6):
-    print(f"Roti number {roti} ban gayi!")`,
-    isAdvanceLevel: false,
-  },
-  'm2-l1': {
-    conceptTitle: 'Big-O Notation & Complexity (Speedometer!)',
-    simpleExplanation: 'Big-O humein batata hai ki jaise-jaise tumhare input ka size (N) badhega, tumhara code kitna slow hoga ya kitni memory lega. Ye kisi algorithm ki efficiency napne ka global standard hai!',
-    analogyTitle: 'Dost ko dhoondna 🔍',
-    analogyContent: 'Agar tum 10 logo ki line me se kisi dost ko ek-ek karke dhoondo, toh maximum 10 baar check karna padega (Linear Time O(N)). Par agar 1 lakh log hon aur koi rule na ho, toh bahut der lagegi! Big-O is speed ko math formulas me likhta hai!',
-    pythonExampleCode: `# O(1) Constant Time - Instant speed!
-def get_first_item(lst):
-    return lst[0] # Hamesha instant!
-
-# O(N) Linear Time - Takes N steps
-def search_item(lst, target):
-    for item in lst:
-        if item == target:
-            return True
-    return False`,
-    isAdvanceLevel: true,
-  },
-  'm3-l1': {
-    conceptTitle: 'Python Decorators (Gift Wrapping 🎁)',
-    simpleExplanation: 'Decorators ek function ke behavior ko dynamically modify karne ke kaam aate hain bina uske original code ko touch kiye! Jaise tum ek chocolate box ko gift wrap karke extra premium bana dete ho!',
-    analogyTitle: 'Gift Wrapper & Ribbon 🎀',
-    analogyContent: 'Chocolate box ke upar shinny sheet lagayi, ribbon lagaya, ab wo normal chocolate se "Gift Box" ban gaya! Python me hum wraps use karte hain, jo \`@decorator_name\` likh ke lagaya jata hai!',
-    pythonExampleCode: `# Simple Decorator function
-def double_it(func):
-    def wrapper():
-        result = func()
-        return result * 2
-    return wrapper
-
-@double_it
-def get_number():
-    return 10 # Returns 10
-
-print(get_number()) # Prints: 20!`,
-    isAdvanceLevel: true,
-  },
-  'm4-l1': {
-    conceptTitle: 'NumPy Arrays & Linear Algebra (Egg Trays 🥚)',
-    simpleExplanation: 'Python list thodi slow hoti hai kyunki wo memory me bikhri hoti hai. NumPy Arrays super-fast hote hain kyunki ye C language par base hain aur continuous block me data save karte hain!',
-    analogyTitle: 'Individual boxes vs Egg Tray 🥚',
-    analogyContent: 'Agar tum 30 ando ko alag-alag chote dabbo me rakho toh manage karna slow hoga. Par ek continuous egg tray me 30 ande ek sath rakh do toh ek baar me safely utha sakte ho! NumPy is that tray!',
-    pythonExampleCode: `import numpy as np
-
-# Creating an optimized vector array
-arr = np.array([1, 2, 3])
-print(arr * 2) # Prints: [2 4 6] - instantly!
-
-# Matrix of zeroes
-zero_grid = np.zeros((3, 3))
-print(zero_grid)`,
-    isAdvanceLevel: true,
-  },
-  'm5-l1': {
-    conceptTitle: 'Supervised Learning & Regression (Line Draw 📈)',
-    simpleExplanation: 'Supervised learning me hum machine ko input data aur uske answers pehle hi de dete hain (jaise teacher student ko sikhata hai). Regression iska ek part hai jo continuous values predict karta hai!',
-    analogyTitle: 'Mithas vs Sugar spoon relation ☕',
-    analogyContent: 'Mummy chai me jitne chammach cheeni dalengi, chai utni hi meethi hogi. Regression is continuous curve ko ek straight line equation y = m*x + c me convert karta hai jo automatic future prediction kar sake!',
-    pythonExampleCode: `# Mathematical linear prediction equation
-def predict_price(area_sqft):
-    # Let's say: Price = 100 * Area + 50000
-    weight = 100
-    bias = 50000
-    return weight * area_sqft + bias
-
-print(predict_price(1200)) # Predicts Price!`,
-    isAdvanceLevel: true,
-  },
-  'm6-l1': {
-    conceptTitle: 'Deep Learning & Backpropagation (Mistake correction!)',
-    simpleExplanation: 'Deep learning humare brain ke neurons ko simulate karta hai. Aur Backpropagation is brain ka learning system hai—galti karke seekhna aur apne aap ko har round me behtar banana!',
-    analogyTitle: 'Darts target shooting 🎯',
-    analogyContent: 'Tumne dart phenka par wo target ke right me laga. Tumhari aankhon ne dekha ki galti kahan hui, brain me weights adjust hue, aur agle round me tumne thoda left me phenka. Backpropagation is mathematically adjusting neural weights!',
-    pythonExampleCode: `# Sigmoid activation function
-import math
-
-def sigmoid(x):
-    # Maps any input to a value between 0 and 1
-    return 1 / (1 + math.exp(-x))
-
-print(sigmoid(0)) # Output: 0.5 (perfect center!)`,
-    isAdvanceLevel: true,
-  }
-};
-
-const getFallbackConcept = (lesson: Lesson): ConceptDetail => {
-  return {
-    conceptTitle: `${lesson.title} (Core Learning Concept)`,
-    simpleExplanation: `Bhai, aaj hum seekhne ja rahe hain "${lesson.title}". Ye concept hamari coding toolkit ko ek naya superpower dega. Chalo pehle dhyan se iske theory aur logic ko samjhein!`,
-    analogyTitle: `Real-life Connect 💡`,
-    analogyContent: `Is concept ko real world me use karke complex code flow ko bahut hi small aur dynamic banaya jata hai. Chalo is lesson ko deep study karke pro bante hain!`,
-    pythonExampleCode: `# Core python syntax structure
-# Let's master this concept step-by-step!
-
-print("Let's start learning!")`,
-    isAdvanceLevel: false,
-  };
-};
 
 export const ExercisePlayer: React.FC<ExercisePlayerProps> = ({
   lesson,
@@ -180,6 +43,66 @@ export const ExercisePlayer: React.FC<ExercisePlayerProps> = ({
   const [bhaiQuestion, setBhaiQuestion] = useState('');
   const [bhaiResponse, setBhaiResponse] = useState('');
   const [isBhaiLoading, setIsBhaiLoading] = useState(false);
+
+  // Ask Tutor deep concept learning state
+  const [showTutorPanel, setShowTutorPanel] = useState(false);
+  const [tutorQuestion, setTutorQuestion] = useState('');
+  const [tutorResponse, setTutorResponse] = useState('');
+  const [isTutorLoading, setIsTutorLoading] = useState(false);
+
+  // Duolingo-style haptic feedback
+  const playHaptic = (type: 'tick' | 'pop' | 'success' | 'error') => {
+    try {
+      const ctx = new (window.AudioContext || (window as any).webkitAudioContext)();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      
+      if (type === 'tick') {
+        osc.frequency.setValueAtTime(800, ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(400, ctx.currentTime + 0.04);
+        gain.gain.setValueAtTime(0.08, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.04);
+        osc.start();
+        osc.stop(ctx.currentTime + 0.05);
+      } else if (type === 'pop') {
+        osc.frequency.setValueAtTime(300, ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(800, ctx.currentTime + 0.06);
+        gain.gain.setValueAtTime(0.12, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.06);
+        osc.start();
+        osc.stop(ctx.currentTime + 0.07);
+      } else if (type === 'success') {
+        const notes = [523.25, 659.25, 783.99, 1046.50];
+        notes.forEach((freq, i) => {
+          const o = ctx.createOscillator();
+          const g = ctx.createGain();
+          o.connect(g); g.connect(ctx.destination);
+          o.frequency.setValueAtTime(freq, ctx.currentTime + i * 0.05);
+          g.gain.setValueAtTime(0.08, ctx.currentTime + i * 0.05);
+          g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + i * 0.05 + 0.2);
+          o.start(ctx.currentTime + i * 0.05);
+          o.stop(ctx.currentTime + i * 0.05 + 0.25);
+        });
+      } else if (type === 'error') {
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(200, ctx.currentTime);
+        osc.frequency.linearRampToValueAtTime(80, ctx.currentTime + 0.15);
+        gain.gain.setValueAtTime(0.15, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.15);
+        osc.start();
+        osc.stop(ctx.currentTime + 0.18);
+      }
+      
+      if (navigator.vibrate) {
+        if (type === 'tick') navigator.vibrate(8);
+        else if (type === 'pop') navigator.vibrate([10, 5]);
+        else if (type === 'success') navigator.vibrate([15, 10, 15]);
+        else if (type === 'error') navigator.vibrate([30, 20]);
+      }
+    } catch (e) {}
+  };
 
   const exercise = lesson.exercises[currentExerciseIndex];
 
@@ -290,6 +213,90 @@ export const ExercisePlayer: React.FC<ExercisePlayerProps> = ({
               </pre>
             </div>
 
+            {/* Ask Tutor deep concept button */}
+            <div className="flex flex-col gap-3">
+              <div className="flex flex-wrap gap-2">
+                <button
+                  onClick={() => askTutorAI("Bhai is concept ko aur detail me samjhao, aur kya-kya use cases hain iske?")}
+                  className="flex items-center gap-1.5 text-xs font-bold px-3 py-2 rounded-xl bg-purple-500/10 text-purple-600 dark:text-purple-400 border border-purple-500/20 hover:bg-purple-500/20 transition-all cursor-pointer"
+                >
+                  <BrainCircuit className="w-3.5 h-3.5" /> Aur Deep Samjhao
+                </button>
+                <button
+                  onClick={() => askTutorAI("Bhai is concept ke real-world me kaha-kaha use hota hai? Examples do.")}
+                  className="flex items-center gap-1.5 text-xs font-bold px-3 py-2 rounded-xl bg-sky-500/10 text-sky-600 dark:text-sky-400 border border-sky-500/20 hover:bg-sky-500/20 transition-all cursor-pointer"
+                >
+                  <BrainCircuit className="w-3.5 h-3.5" /> Real-World Uses
+                </button>
+                <button
+                  onClick={() => askTutorAI("Bhai is concept me common mistakes kya hain jo log karte hain?")}
+                  className="flex items-center gap-1.5 text-xs font-bold px-3 py-2 rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20 hover:bg-amber-500/20 transition-all cursor-pointer"
+                >
+                  <BrainCircuit className="w-3.5 h-3.5" /> Common Mistakes
+                </button>
+                <button
+                  onClick={() => {
+                    setShowTutorPanel(true);
+                    setTutorQuestion('');
+                  }}
+                  className="flex items-center gap-1.5 text-xs font-bold px-3 py-2 rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 hover:bg-emerald-500/20 transition-all cursor-pointer"
+                >
+                  <HelpCircle className="w-3.5 h-3.5" /> Apna Sawaal Pucho
+                </button>
+              </div>
+
+              {/* Expandable Deep Tutor Panel - flexible height */}
+              <AnimatePresence>
+                {showTutorPanel && (
+                  <motion.div
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: 'auto', opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    className="overflow-hidden"
+                  >
+                    <div className="bg-slate-50 dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-4 flex flex-col gap-3">
+                      {tutorResponse && (
+                        <div className="bg-white dark:bg-slate-950 p-4 rounded-xl border border-slate-200 dark:border-slate-800 text-sm leading-relaxed text-slate-800 dark:text-slate-100 whitespace-pre-wrap">
+                          <div className="font-bold text-xs text-purple-500 mb-2 flex items-center gap-1">
+                            <BrainCircuit className="w-3.5 h-3.5" /> SLYTHE BHAI AI TUTOR:
+                          </div>
+                          {tutorResponse}
+                        </div>
+                      )}
+                      {isTutorLoading && (
+                        <div className="flex items-center gap-2 text-xs font-mono text-purple-500 animate-pulse px-2">
+                          <Sparkles className="w-4 h-4 animate-spin" /> Bhai soch raha hai... deep explanation taiyaar kar raha hai...
+                        </div>
+                      )}
+                      <div className="flex items-center gap-2">
+                        <input
+                          type="text"
+                          value={tutorQuestion}
+                          onChange={(e) => setTutorQuestion(e.target.value)}
+                          onKeyDown={(e) => e.key === 'Enter' && askTutorAI()}
+                          placeholder="Pucho: Bhai ye concept aur kaise samjhu?"
+                          className="flex-1 bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 px-3 py-2.5 rounded-xl text-sm focus:outline-none focus:ring-1 focus:ring-purple-500 text-slate-800 dark:text-slate-100"
+                        />
+                        <button
+                          onClick={() => askTutorAI()}
+                          disabled={isTutorLoading || !tutorQuestion.trim()}
+                          className="p-2.5 bg-purple-500 hover:bg-purple-400 text-white rounded-xl transition-all active:scale-95 disabled:bg-slate-300 disabled:text-slate-400 dark:disabled:bg-slate-800 cursor-pointer shrink-0"
+                        >
+                          <Send className="w-4 h-4" />
+                        </button>
+                        <button
+                          onClick={() => { setShowTutorPanel(false); setTutorResponse(''); }}
+                          className="p-2.5 bg-slate-200 dark:bg-slate-800 text-slate-500 rounded-xl transition-all hover:bg-slate-300 dark:hover:bg-slate-700 cursor-pointer shrink-0"
+                        >
+                          <X className="w-4 h-4" />
+                        </button>
+                      </div>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+
             {/* Confirm & Continue button */}
             <button
               onClick={() => {
@@ -326,6 +333,7 @@ export const ExercisePlayer: React.FC<ExercisePlayerProps> = ({
 
   const handleOptionSelect = (idx: number) => {
     if (hasChecked) return;
+    playHaptic('tick');
     setSelectedOption(idx);
     setMascotState('think_chin_tap');
     setMascotBubble('Hmm, lagta hai tumhein iska jawab pata hai?');
@@ -333,6 +341,7 @@ export const ExercisePlayer: React.FC<ExercisePlayerProps> = ({
 
   const handlePredictSelect = (option: string) => {
     if (hasChecked) return;
+    playHaptic('tick');
     setPredictValue(option);
     setMascotState('think_chin_tap');
     setMascotBubble('Ye output aayega kya? Socho.');
@@ -340,6 +349,7 @@ export const ExercisePlayer: React.FC<ExercisePlayerProps> = ({
 
   const toggleDragItem = (item: string) => {
     if (hasChecked) return;
+    playHaptic('tick');
     if (dragSelections.includes(item)) {
       setDragSelections(dragSelections.filter(x => x !== item));
     } else {
@@ -350,6 +360,7 @@ export const ExercisePlayer: React.FC<ExercisePlayerProps> = ({
 
   const checkAnswer = () => {
     if (hasChecked) return;
+    playHaptic('pop');
     let correct = false;
 
     if (exercise.type === 'MCQ') {
@@ -400,6 +411,7 @@ export const ExercisePlayer: React.FC<ExercisePlayerProps> = ({
   };
 
   const advanceExercise = () => {
+    playHaptic('success');
     if (currentExerciseIndex + 1 < lesson.exercises.length) {
       setCurrentExerciseIndex(currentExerciseIndex + 1);
     } else {
@@ -408,43 +420,105 @@ export const ExercisePlayer: React.FC<ExercisePlayerProps> = ({
   };
 
   const askBhaiAI = async () => {
+    playHaptic('pop');
     if (!bhaiQuestion.trim()) return;
     setIsBhaiLoading(true);
     setBhaiResponse('');
 
+    const provider = settings?.aiProvider || 'gemini';
+    const keyField = `${provider}ApiKey`;
+    const urlField = `${provider}BaseUrl`;
+    const userApiKey = (settings as any)?.[keyField] || '';
+    const userBaseUrl = (settings as any)?.[urlField] || '';
+    const selectedModel = settings?.selectedModel;
+
+    if (!userApiKey && provider !== 'gemini') {
+      setBhaiResponse("Arre bhai! Settings mein API Key toh daal pehle! Bina key ke main kaise help karunga?");
+      setIsBhaiLoading(false);
+      return;
+    }
+
     try {
-      const provider = settings?.aiProvider || 'gemini';
-      const keyField = `${provider}ApiKey`;
-      const urlField = `${provider}BaseUrl`;
-      const userApiKey = (settings as any)?.[keyField] || '';
-      const userBaseUrl = (settings as any)?.[urlField] || '';
+      const providerConfig: ProviderConfig = {
+        aiProvider: provider,
+        apiKey: userApiKey,
+        baseUrl: userBaseUrl,
+        selectedModel,
+      };
 
-      const response = await fetch('/api/hint', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          question: bhaiQuestion,
-          exerciseContext: {
-            type: exercise.type,
-            question: exercise.question,
-            hint: exercise.romanHindiHint,
-            code: (exercise as any).code || (exercise as any).buggyCode || ''
-          },
-          providerConfig: {
-            aiProvider: provider,
-            apiKey: userApiKey,
-            baseUrl: userBaseUrl,
-            selectedModel: settings?.selectedModel
-          }
-        }),
-      });
+      const exerciseContext = {
+        question: exercise.question,
+        hint: exercise.romanHindiHint,
+        code: (exercise as any).code || (exercise as any).buggyCode || ''
+      };
 
-      const data = await response.json();
-      setBhaiResponse(data.reply || 'Arre bhai, network slow hai ya server thoda busy hai. Tab tak meri local hint dekh lo!');
-    } catch (e) {
-      setBhaiResponse('Arre bhai! Tera Gemini API Key configure nahi hai, ya server response slow hai! Setting menu me Secrets check kar. Tab tak dhyan se check karo local hint ko, tum kar loge!');
+      const answer = await fetchHint(bhaiQuestion, exerciseContext, providerConfig);
+      setBhaiResponse(answer);
+    } catch (err: any) {
+      setBhaiResponse(err.message || 'Arre bhai! Tera API Key configure nahi hai, ya network slow hai! Setting menu me Secrets check kar. Tab tak dhyan se check karo local hint ko, tum kar loge!');
     } finally {
       setIsBhaiLoading(false);
+    }
+  };
+
+  const askTutorAI = async (customPrompt?: string) => {
+    const queryText = customPrompt || tutorQuestion;
+    if (!queryText.trim()) return;
+    setShowTutorPanel(true);
+    setIsTutorLoading(true);
+    if (!customPrompt) setTutorQuestion('');
+
+    const provider = settings?.aiProvider || 'gemini';
+    const keyField = `${provider}ApiKey`;
+    const urlField = `${provider}BaseUrl`;
+    const userApiKey = (settings as any)?.[keyField] || '';
+    const userBaseUrl = (settings as any)?.[urlField] || '';
+    const selectedModel = settings?.selectedModel;
+
+    if (!userApiKey) {
+      setTutorResponse("Arre bhai! Settings mein API Key toh daal pehle! Bina key ke main kaise deep concept sikhaunga?");
+      setIsTutorLoading(false);
+      return;
+    }
+
+    const concept = LESSON_CONCEPTS[lesson.id] || getFallbackConcept(lesson);
+    const deepTutorPrompt = `
+You are Slythe Bhai, an expert Python & AI/ML tutor for PyDuo platform.
+The student is currently studying the concept: "${lesson.title}".
+Concept Title: "${concept.conceptTitle}"
+Concept Explanation: "${concept.simpleExplanation}"
+Analogy: "${concept.analogyTitle}" - "${concept.analogyContent}"
+
+Student's question: "${queryText}"
+
+CRITICAL INSTRUCTIONS:
+1. Speak EXCLUSIVELY in friendly Roman Hindi (Hindi in Latin script).
+2. Explain deeply but in simple terms. Use real-world analogies.
+3. Be encouraging - use phrases like "Arre bhai!", "Dekho", "Samjho".
+4. If the student asks for more depth, provide step-by-step breakdown.
+5. Keep response thorough but under 200 words. Use code examples if helpful.
+`;
+
+    try {
+      const providerConfig: ProviderConfig = {
+        aiProvider: provider,
+        apiKey: userApiKey,
+        baseUrl: userBaseUrl,
+        selectedModel,
+      };
+
+      const exerciseContext = {
+        question: lesson.title,
+        hint: concept.simpleExplanation,
+        code: concept.pythonExampleCode,
+      };
+
+      const answer = await fetchHint(queryText, exerciseContext, providerConfig);
+      setTutorResponse(answer);
+    } catch (err: any) {
+      setTutorResponse(err.message || 'Arre bhai! API Key ya network me issue hai. Setting check karo!');
+    } finally {
+      setIsTutorLoading(false);
     }
   };
 
@@ -737,9 +811,9 @@ export const ExercisePlayer: React.FC<ExercisePlayerProps> = ({
                   </div>
 
                   {bhaiResponse ? (
-                    <div className="bg-slate-50 dark:bg-slate-950 p-4 rounded-2xl border border-slate-100 dark:border-slate-800 text-sm leading-relaxed text-slate-800 dark:text-slate-100 max-h-[180px] overflow-y-auto">
+                    <div className="bg-slate-50 dark:bg-slate-950 p-4 rounded-2xl border border-slate-100 dark:border-slate-800 text-sm leading-relaxed text-slate-800 dark:text-slate-100 max-h-[400px] overflow-y-auto">
                       <div className="font-bold text-xs text-emerald-500 mb-1">BHAI AI ({settings?.aiProvider?.toUpperCase() || 'GEMINI'}):</div>
-                      <p className="whitespace-pre-wrap">{bhaiResponse}</p>
+                      <p className="whitespace-pre-wrap break-words">{bhaiResponse}</p>
                     </div>
                   ) : (
                     <div className="p-4 rounded-2xl border border-dashed border-slate-200 dark:border-slate-800 text-center text-slate-400 text-xs italic py-6 select-none">

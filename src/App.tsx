@@ -5,6 +5,7 @@ import { ExercisePlayer } from './components/ExercisePlayer';
 import { ProfilePage } from './components/ProfilePage';
 import { SettingsPage } from './components/SettingsPage';
 import { SnakeMascot } from './components/SnakeMascot';
+import { CuteSnakeLogo } from './components/CuteSnakeLogo';
 import { CodeSandbox } from './components/CodeSandbox';
 import { BhaiGameZone } from './components/BhaiGameZone';
 import { CodeDarbar } from './components/CodeDarbar';
@@ -12,6 +13,7 @@ import { modules } from './curriculum';
 import { UserStats, DailyQuest, UserProgress, Settings, Lesson, Module } from './types';
 import { Flame, Heart, Zap, Award, Star, Settings as SettingsIcon, LogOut, ArrowLeft, Terminal, ShieldCheck, Sparkles, Trophy, Gamepad2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
+import { App as CapacitorApp } from '@capacitor/app';
 
 // Default initial state declarations
 const DEFAULT_STATS: UserStats = {
@@ -62,6 +64,75 @@ export default function App() {
   // Bhai's Game Zone toggle & Daily Practice time states
   const [showBhaiGameZone, setShowBhaiGameZone] = useState<boolean>(false);
   const [practiceTimeSpent, setPracticeTimeSpent] = useState<number>(0);
+
+  // Unified function to navigate with browser history states for back gesture handling
+  const navigateTo = (screen: 'landing' | 'map' | 'exercise' | 'profile' | 'settings' | 'capstone' | 'sandbox') => {
+    setCurrentScreen(screen);
+    // Push the new screen state if not already there to prevent page exits on back gestures
+    if (!window.history.state || window.history.state.screen !== screen) {
+      window.history.pushState({ screen }, '');
+    }
+  };
+
+  // Sync initial browser history state
+  useEffect(() => {
+    window.history.replaceState({ screen: 'landing' }, '');
+  }, []);
+
+  // Listen for back gesture / popstate events
+  useEffect(() => {
+    const handlePopState = (event: PopStateEvent) => {
+      if (event.state && event.state.screen) {
+        setCurrentScreen(event.state.screen);
+        if (event.state.screen !== 'exercise') {
+          setActiveLesson(null);
+        }
+        if (event.state.screen !== 'capstone') {
+          setActiveModule(null);
+        }
+      } else {
+        setCurrentScreen('landing');
+        setActiveLesson(null);
+        setActiveModule(null);
+      }
+    };
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
+
+  // Capacitor Android hardware back button handler
+  useEffect(() => {
+    const handleBackButton = (event: { canGoBack: boolean }) => {
+      // Prevent default back behavior (app exit)
+      event.canGoBack = true;
+      
+      // Handle navigation based on current screen
+      if (currentScreen === 'exercise') {
+        setActiveLesson(null);
+        navigateTo('map');
+      } else if (currentScreen === 'capstone') {
+        setActiveModule(null);
+        navigateTo('map');
+      } else if (currentScreen === 'profile' || currentScreen === 'settings' || currentScreen === 'sandbox') {
+        navigateTo('map');
+      } else if (currentScreen === 'map') {
+        navigateTo('landing');
+      } else if (currentScreen === 'landing') {
+        // On landing, allow app to exit (or minimize)
+        event.canGoBack = false;
+      }
+    };
+    
+    CapacitorApp.addListener('backButton', handleBackButton);
+    return () => {
+      CapacitorApp.removeAllListeners();
+    };
+  }, [currentScreen, navigateTo]);
+
+  // Scroll to top on navigation/state changes
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [currentScreen, activeLesson, activeModule]);
 
   // 1. Initial State Hydration from local storage
   useEffect(() => {
@@ -309,7 +380,7 @@ export default function App() {
       setLessonRewardXP(xpEarned);
       setShowLessonCompletedOverlay(true);
       setActiveLesson(null);
-      setCurrentScreen('map');
+      navigateTo('map');
     }
   };
 
@@ -330,12 +401,12 @@ export default function App() {
       return;
     }
     setActiveLesson(lesson);
-    setCurrentScreen('exercise');
+    navigateTo('exercise');
   };
 
   const handleSelectModule = (module: Module) => {
     setActiveModule(module);
-    setCurrentScreen('capstone');
+    navigateTo('capstone');
   };
 
   // Capstone Project solver action
@@ -365,7 +436,7 @@ export default function App() {
       awardXP(activeModule.capstone.xpReward);
       alert(`Badhaai ho bhai! Capstone Project successfully compiled! You earned +${activeModule.capstone.xpReward} XP!`);
       setActiveModule(null);
-      setCurrentScreen('map');
+      navigateTo('map');
     } else {
       alert("Bhai, output specifications check karo. Project execution me errors hain.");
     }
@@ -412,9 +483,9 @@ export default function App() {
       {/* 1. Standard Landing Mode */}
       {currentScreen === 'landing' ? (
         <LandingPage
-          onStartLearning={() => setCurrentScreen('map')}
-          onGoToProfile={() => setCurrentScreen('profile')}
-          onGoToSettings={() => setCurrentScreen('settings')}
+          onStartLearning={() => navigateTo('map')}
+          onGoToProfile={() => navigateTo('profile')}
+          onGoToSettings={() => navigateTo('settings')}
         />
       ) : (
         /* 2. Unified Learning Dashboard Shell */
@@ -425,10 +496,10 @@ export default function App() {
               
               {/* Logo / Back home trigger */}
               <div
-                onClick={() => setCurrentScreen('landing')}
+                onClick={() => navigateTo('landing')}
                 className="flex items-center gap-2 cursor-pointer group"
               >
-                <span className="text-2xl group-hover:scale-110 transition-transform">🐍</span>
+                <CuteSnakeLogo size={32} />
                 <span className="font-black text-xl font-display tracking-tight text-slate-900 dark:text-white flex items-center gap-1.5">
                   PyDuo <span className="text-[10px] bg-brand-blue/10 text-[#306998] dark:text-[#FFD43B] border border-brand-blue/20 px-2 py-0.5 rounded-full font-mono font-bold">WASM</span>
                 </span>
@@ -437,7 +508,7 @@ export default function App() {
               {/* Central Navigation Tabs */}
               <div className="flex items-center gap-2 bg-slate-100 dark:bg-slate-900 p-1 rounded-2xl border-2 border-slate-200 dark:border-slate-800">
                 <button
-                  onClick={() => setCurrentScreen('map')}
+                  onClick={() => navigateTo('map')}
                   className={`px-4 py-2 rounded-xl text-xs font-black font-display transition-all cursor-pointer ${
                     currentScreen === 'map' || currentScreen === 'exercise'
                       ? 'bg-[#306998] text-white shadow-md border-b-2 border-[#204c70]'
@@ -447,7 +518,7 @@ export default function App() {
                   🗺️ Map Path
                 </button>
                 <button
-                  onClick={() => setCurrentScreen('profile')}
+                  onClick={() => navigateTo('profile')}
                   className={`px-4 py-2 rounded-xl text-xs font-black font-display transition-all cursor-pointer ${
                     currentScreen === 'profile'
                       ? 'bg-[#306998] text-white shadow-md border-b-2 border-[#204c70]'
@@ -457,7 +528,7 @@ export default function App() {
                   🏆 Stats & Quests
                 </button>
                 <button
-                  onClick={() => setCurrentScreen('sandbox')}
+                  onClick={() => navigateTo('sandbox')}
                   className={`px-4 py-2 rounded-xl text-xs font-black font-display transition-all cursor-pointer ${
                     currentScreen === 'sandbox'
                       ? 'bg-[#306998] text-white shadow-md border-b-2 border-[#204c70]'
@@ -467,7 +538,7 @@ export default function App() {
                   💻 Code Darbar
                 </button>
                 <button
-                  onClick={() => setCurrentScreen('settings')}
+                  onClick={() => navigateTo('settings')}
                   className={`px-4 py-2 rounded-xl text-xs font-black font-display transition-all cursor-pointer ${
                     currentScreen === 'settings'
                       ? 'bg-[#306998] text-white shadow-md border-b-2 border-[#204c70]'
@@ -533,7 +604,7 @@ export default function App() {
                 settings={settings}
                 onBack={() => {
                   setActiveLesson(null);
-                  setCurrentScreen('map');
+                  navigateTo('map');
                 }}
                 onLessonComplete={handleLessonCompleted}
                 userHearts={userStats.hearts}
@@ -563,7 +634,7 @@ export default function App() {
             {currentScreen === 'sandbox' && (
               <CodeDarbar
                 settings={settings}
-                onBack={() => setCurrentScreen('map')}
+                onBack={() => navigateTo('map')}
                 onGainXP={awardXP}
               />
             )}
@@ -575,7 +646,7 @@ export default function App() {
                 <button
                   onClick={() => {
                     setActiveModule(null);
-                    setCurrentScreen('map');
+                    navigateTo('map');
                   }}
                   className="flex items-center gap-2 text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-white transition-colors font-semibold text-sm mb-6 select-none cursor-pointer"
                 >

@@ -44,7 +44,7 @@ export const AppMap: React.FC<AppMapProps> = ({
       for (let i = 0; i < modules.length; i++) {
         const prevMod = i === 0 ? null : modules[i - 1];
         const prevCompleted = prevMod ? prevMod.lessons.filter(l => completedLessons.includes(l.id)).length : 999;
-        const isUnlocked = i === 0 || prevCompleted >= Math.min(2, prevMod!.lessons.length);
+        const isUnlocked = i === 0 || prevCompleted >= prevMod!.lessons.length;
         if (isUnlocked) {
           highestUnlocked = modules[i];
         }
@@ -192,7 +192,7 @@ export const AppMap: React.FC<AppMapProps> = ({
     const prevMod = modules[index - 1];
     const prevLessonsCount = prevMod.lessons.length;
     const prevCompletedCount = prevMod.lessons.filter(l => completedLessons.includes(l.id)).length;
-    return prevCompletedCount >= Math.min(2, prevLessonsCount) ? 'unlocked' : 'locked';
+    return prevCompletedCount >= prevLessonsCount ? 'unlocked' : 'locked';
   };
 
   const getModuleCompletionRate = (mod: Module) => {
