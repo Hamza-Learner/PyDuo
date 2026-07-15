@@ -240,14 +240,15 @@ npm run start
 
 ---
 
+---
+
 # 📱 Android APK
 
-Download the latest Android release from the project's GitHub Releases page.
+**Latest Release (v1.0.0):**  
+📥 **[Download app-release.apk](https://github.com/Hamza-Learner/PyDuo/releases/download/v1.0.0/app-release.apk)**  
+*(Signed release APK — ready to install on any Android device. Enable "Install unknown apps" if prompted.)*
 
-> Signed APK ready to install.
-
-Enable **Install Unknown Apps** on your Android device if prompted.
-
+All releases: https://github.com/Hamza-Learner/PyDuo/releases
 ---
 
 # ⚙️ Build Android APK (Capacitor)
