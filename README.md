@@ -186,7 +186,15 @@ npm run start
 
 ---
 
-# ðŸ“± Build Android APK (Capacitor)
+# ðŸ“± Android APK Download
+
+**Latest Release (v1.0.0):**  
+📥 **[Download app-release.apk](https://github.com/Hamza-Learner/PyDuo/releases/download/v1.0.0/app-release.apk)**  
+*(Signed release APK — ready to install on any Android device. Enable "Install unknown apps" if prompted.)*
+
+---
+
+# ðŸ“± Build Android APK (Capacitor) — For Developers
 
 ## Step 1 â€” Install Capacitor
 
@@ -205,19 +213,16 @@ npx cap init
 Example:
 
 App Name:
-
 ```
 PyDuo
 ```
 
 App ID:
-
 ```
 com.learning.pyduo
 ```
 
 Set:
-
 ```
 webDir = dist
 ```
@@ -228,7 +233,6 @@ webDir = dist
 
 ```bash
 npm install @capacitor/android
-
 npx cap add android
 ```
 
@@ -238,7 +242,6 @@ npx cap add android
 
 ```bash
 npm run build
-
 npx cap sync
 ```
 
@@ -252,37 +255,20 @@ npx cap open android
 
 ---
 
-## Step 6 â€” Build APK
+## Step 6 â€” Build Signed Release APK
 
-Inside Android Studio:
+1. In Android Studio: **Build → Generate Signed Bundle / APK → APK → Release**  
+2. Select your keystore (or create one).  
+3. Output: `android/app/build/outputs/apk/release/app-release.apk`
 
-```
-Build
-    â†“
-Build Bundle(s) / APK(s)
-    â†“
-Build APK(s)
-```
+---
 
-When completed:
+## Automated Release (CI)
 
-```
-APK(s) generated successfully
-```
+This repo uses GitHub Actions to build & publish a signed APK on every tag push (`v*.*.*`).  
+See the **Releases** page for all downloadable APKs:
 
-Click:
-
-```
-Locate
-```
-
-Your APK will be available as:
-
-```
-app-debug.apk
-```
-
-Transfer it to your Android phone and install.
+🔗 https://github.com/Hamza-Learner/PyDuo/releases
 
 ---
 
