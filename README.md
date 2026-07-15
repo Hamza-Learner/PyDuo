@@ -1,144 +1,198 @@
-﻿# ðŸ PyDuo â€” Learn Python & AI, Duolingo-Style!
+# 🐍 PyDuo — Learn Python & AI, Duolingo-Style
 
-> **Learn Python, Machine Learning, and Deep Learning interactively with Slythe, your friendly animated snake mentor!**
+<div align="center">
 
-PyDuo is a gamified, interactive, and community-first full-stack learning platform designed to teach **Python, Machine Learning, and Deep Learning** in a fun, bite-sized format. Led by your charismatic animated snake mentor **Slythe**, the application makes coding engaging with visual progression, instant feedback, an animated mascot, and a powerful live coding playground.
+<img src="assets/logo.png" alt="PyDuo Logo" width="140"/>
 
----
+### Learn **Python, Machine Learning & Deep Learning** with **Slythe**, your friendly animated snake mentor.
 
-# âœ¨ Core Features
+A gamified, interactive, community-driven learning platform that makes coding fun through bite-sized lessons, instant feedback, XP, streaks, and a live coding playground.
 
-## ðŸ Slythe â€” The Animated Mascot
+![React](https://img.shields.io/badge/React-18-61DAFB?logo=react)
+![Vite](https://img.shields.io/badge/Vite-6-646CFF?logo=vite)
+![TailwindCSS](https://img.shields.io/badge/TailwindCSS-38BDF8?logo=tailwindcss)
+![Node.js](https://img.shields.io/badge/Node.js-18+-339933?logo=node.js)
+![License](https://img.shields.io/badge/License-MIT-green)
 
-- Animated SVG/Motion mascot that responds dynamically to your performance.
-- Smiles when you write correct code.
-- Looks curious during lessons.
-- Cheers you on with helpful tips.
-- No more boring, faceless tutorials!
+⭐ If you enjoy this project, consider giving it a star!
 
----
-
-## ðŸŽ® Gamified Learning Path
-
-- ðŸ“š Progressive Modules
-  - Learn step-by-step from Python basics to Deep Learning.
-
-- â­ XP & Levels
-  - Earn XP after every lesson and coding exercise.
-
-- â¤ï¸ Hearts & Daily Streaks
-  - Maintain your learning streak.
-  - Lose hearts on wrong submissions.
-  - Refill hearts through practice.
-
-- ðŸŽ¯ Daily Quests
-  - Complete special challenges to earn bonus XP and rewards.
+</div>
 
 ---
 
-## ðŸ’» Code Darbar (Interactive Playground)
+# ✨ Features
 
-Practice Python directly inside your browser.
+## 🐍 Meet Slythe
 
-### Features
+Your personal animated coding mentor.
 
-- Powered by **Pyodide (WebAssembly)**
-- No installation required
-- Real Python execution
-- Ready-made templates
-
-Templates include:
-
-- Hello World
-- Loops
-- Functions
-- Fibonacci
-- Pattern Printing
+* 😊 Celebrates your correct answers
+* 🤔 Reacts during lessons
+* 💡 Gives helpful coding hints
+* 🎉 Motivates you as you progress
+* ❤️ Makes learning fun instead of boring
 
 ---
 
-## ðŸ§  Slythe AI Mentor
+# 🎮 Gamified Learning
+
+Learn programming like you're playing a game.
+
+### 📚 Progressive Learning Path
+
+Go from:
+
+* Python Basics
+* Data Structures
+* OOP
+* File Handling
+* Machine Learning
+* Deep Learning
+
+One lesson at a time.
+
+---
+
+### ⭐ XP & Levels
+
+* Earn XP after every lesson
+* Level up as you learn
+* Unlock new modules
+
+---
+
+### ❤️ Hearts System
+
+* Wrong answers cost hearts
+* Practice to refill them
+* Learn from mistakes without frustration
+
+---
+
+### 🔥 Daily Streaks
+
+Stay consistent.
+
+Build your coding habit one day at a time.
+
+---
+
+### 🎯 Daily Quests
+
+Complete challenges for:
+
+* Bonus XP
+* Rewards
+* Extra practice
+
+---
+
+# 💻 Code Darbar (Interactive Playground)
+
+Practice Python directly in your browser.
+
+### Powered by
+
+* Pyodide (WebAssembly)
+* Monaco Editor
+* Instant execution
+* No installation required
+
+### Built-in Templates
+
+* 👋 Hello World
+* 🔁 Loops
+* 🧩 Functions
+* 🔢 Fibonacci
+* ⭐ Pattern Printing
+
+Write, Run, Learn.
+
+---
+
+# 🧠 Slythe AI Mentor
 
 Need help?
 
 Chat with Slythe anytime.
 
-He can:
+### Slythe can:
 
-- Explain Python concepts
-- Fix syntax errors
-- Find logical bugs
-- Optimize your code
-- Explain code line-by-line
+* Explain Python concepts
+* Fix syntax errors
+* Detect logical bugs
+* Optimize code
+* Explain code line-by-line
 
-Quick buttons include:
+### Quick Actions
 
-- Explain Code
-- Find Bug
-- Optimize
-- Simplify Logic
-
----
-
-## ðŸ“‚ Capstone Projects & Live Verification
-
-Build real-world projects like:
-
-- Calculator
-- Budget Planner
-- Array Utilities
-- Data Processing Scripts
-
-Every project includes:
-
-- Automatic Tests
-- Instant Feedback
-- Assertion-based Verification
+* Explain Code
+* Find Bug
+* Optimize
+* Simplify Logic
 
 ---
 
-# ðŸ› ï¸ Technical Architecture
+# 📂 Capstone Projects
+
+Build real-world projects while learning.
+
+Examples include:
+
+* 🧮 Calculator
+* 💰 Budget Planner
+* 📊 Data Processing
+* 🔢 Array Utilities
+
+Each project includes:
+
+* ✅ Automatic tests
+* ⚡ Instant feedback
+* ✔️ Assertion-based verification
+
+---
+
+# 🛠 Tech Stack
 
 ## Frontend
 
-- React 18
-- Vite
-- Tailwind CSS
-- Framer Motion
-- Monaco Editor
-
----
+* React 18
+* Vite
+* Tailwind CSS
+* Framer Motion
+* Monaco Editor
 
 ## Backend
 
-- Node.js
-- Express.js
-- ES Modules
-- Pyodide Integration
-- Secure API Proxy
-- Production Static Server
+* Node.js
+* Express.js
+* ES Modules
+* Pyodide Integration
+* Secure API Proxy
+* Production Static Server
 
 ---
 
-# ðŸš€ Local Installation
+# 🚀 Getting Started
 
-## 1ï¸âƒ£ Prerequisites
+## Prerequisites
 
 Install:
 
-- Node.js v18 or higher
+* Node.js 18+
 
 ---
 
-## 2ï¸âƒ£ Clone or Extract
+## Clone the Repository
 
 ```bash
-cd pyduo
+git clone https://github.com/Hamza-Learner/PyDuo.git
+cd PyDuo
 ```
 
 ---
 
-## 3ï¸âƒ£ Install Dependencies
+## Install Dependencies
 
 ```bash
 npm install
@@ -146,7 +200,7 @@ npm install
 
 ---
 
-## 4ï¸âƒ£ Configure Environment
+## Configure Environment
 
 Create a `.env` file in the project root.
 
@@ -156,29 +210,29 @@ GEMINI_API_KEY=your_gemini_api_key_here
 
 ---
 
-## 5ï¸âƒ£ Run Development Server
+## Start Development Server
 
 ```bash
 npm run dev
 ```
 
-Open your browser:
+Open:
 
-```
+```text
 http://localhost:3000
 ```
 
 ---
 
-# ðŸ“¦ Production Build
+# 📦 Production
 
-Build the application:
+Build the project
 
 ```bash
 npm run build
 ```
 
-Start production server:
+Start the production server
 
 ```bash
 npm run start
@@ -186,50 +240,53 @@ npm run start
 
 ---
 
-# ðŸ“± Android APK Download
+# 📱 Android APK
 
-**Latest Release (v1.0.0):**  
-📥 **[Download app-release.apk](https://github.com/Hamza-Learner/PyDuo/releases/download/v1.0.0/app-release.apk)**  
-*(Signed release APK — ready to install on any Android device. Enable "Install unknown apps" if prompted.)*
+Download the latest Android release from the project's GitHub Releases page.
+
+> Signed APK ready to install.
+
+Enable **Install Unknown Apps** on your Android device if prompted.
 
 ---
 
-# ðŸ“± Build Android APK (Capacitor) — For Developers
+# ⚙️ Build Android APK (Capacitor)
 
-## Step 1 â€” Install Capacitor
+## Install Capacitor
 
 ```bash
 npm install @capacitor/core @capacitor/cli
 ```
 
----
-
-## Step 2 â€” Initialize Capacitor
+## Initialize
 
 ```bash
 npx cap init
 ```
 
-Example:
+Example
 
-App Name:
-```
+**App Name**
+
+```text
 PyDuo
 ```
 
-App ID:
-```
+**App ID**
+
+```text
 com.learning.pyduo
 ```
 
-Set:
-```
+Set
+
+```text
 webDir = dist
 ```
 
 ---
 
-## Step 3 â€” Install Android Platform
+## Add Android Platform
 
 ```bash
 npm install @capacitor/android
@@ -238,7 +295,7 @@ npx cap add android
 
 ---
 
-## Step 4 â€” Build & Sync
+## Build & Sync
 
 ```bash
 npm run build
@@ -247,60 +304,80 @@ npx cap sync
 
 ---
 
-## Step 5 â€” Open Android Studio
+## Open Android Studio
 
 ```bash
 npx cap open android
 ```
 
----
+Generate a signed Release APK from:
 
-## Step 6 â€” Build Signed Release APK
-
-1. In Android Studio: **Build → Generate Signed Bundle / APK → APK → Release**  
-2. Select your keystore (or create one).  
-3. Output: `android/app/build/outputs/apk/release/app-release.apk`
+**Build → Generate Signed Bundle / APK → APK**
 
 ---
 
-## Automated Release (CI)
+# 🤖 GitHub Actions
 
-This repo uses GitHub Actions to build & publish a signed APK on every tag push (`v*.*.*`).  
-See the **Releases** page for all downloadable APKs:
+This project supports automated Android builds using GitHub Actions.
 
-🔗 https://github.com/Hamza-Learner/PyDuo/releases
+Every version tag (`v*.*.*`) automatically builds and publishes a signed APK to GitHub Releases.
 
 ---
 
+# 🌟 Why PyDuo?
 
-# ðŸŒŸ Highlights
+✅ Duolingo-style Learning
 
-- ðŸ Animated Snake Mentor
-- ðŸŽ® Duolingo-style Learning
-- ðŸ§  AI Coding Mentor
-- ðŸ’» Browser Python Playground
-- ðŸ† XP, Levels & Streaks
-- â¤ï¸ Hearts System
-- ðŸŽ¯ Daily Quests
-- ðŸ“‚ Capstone Projects
-- ðŸ“± Android APK Support
-- ðŸš€ Fast React + Vite Stack
-- ðŸ”’ Secure AI Backend
+✅ Animated Snake Mentor
+
+✅ AI Coding Assistant
+
+✅ Browser Python Playground
+
+✅ XP & Levels
+
+✅ Hearts System
+
+✅ Daily Quests
+
+✅ Coding Projects
+
+✅ Android Support
+
+✅ Fast React + Vite Architecture
+
+✅ Secure Backend
+
+---
+
+# 🤝 Contributing
+
+Contributions are always welcome.
+
+1. Fork the repository
+2. Create a new branch
+3. Commit your changes
+4. Push your branch
+5. Open a Pull Request
+
+---
+
+# 📄 License
+
+This project is licensed under the **MIT License**.
 
 ---
 
 <div align="center">
 
-# ðŸ Happy Coding with PyDuo!
+# 🐍 Happy Coding with PyDuo!
 
-**Developed with â¤ï¸ for students worldwide.**
+### Learn • Practice • Build • Master Python
 
-Practice daily.
+Made with ❤️ for students and developers around the world.
 
-Code beautifully.
+**Code every day. Build amazing things. Never stop learning.**
 
-Master Python.
+⭐ **Don't forget to star the repository if you like the project!**
 
-â­ If you like this project, don't forget to star the repository!
-
-
+</div>
