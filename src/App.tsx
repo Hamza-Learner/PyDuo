@@ -14,6 +14,7 @@ import { UserStats, DailyQuest, UserProgress, Settings, Lesson, Module } from '.
 import { Flame, Heart, Zap, Award, Star, Settings as SettingsIcon, LogOut, ArrowLeft, Terminal, ShieldCheck, Sparkles, Trophy, Gamepad2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { App as CapacitorApp } from '@capacitor/app';
+import { playHaptic } from './utils/haptics';
 
 // Default initial state declarations
 const DEFAULT_STATS: UserStats = {
@@ -67,6 +68,7 @@ export default function App() {
 
   // Unified function to navigate with browser history states for back gesture handling
   const navigateTo = (screen: 'landing' | 'map' | 'exercise' | 'profile' | 'settings' | 'capstone' | 'sandbox') => {
+    playHaptic('tick');
     setCurrentScreen(screen);
     // Push the new screen state if not already there to prevent page exits on back gestures
     if (!window.history.state || window.history.state.screen !== screen) {
@@ -154,6 +156,9 @@ export default function App() {
         } else {
           document.documentElement.classList.remove('dark');
         }
+      } else {
+        // No stored settings - ensure light theme is applied by default
+        document.documentElement.classList.remove('dark');
       }
       if (storedQuests) setDailyQuests(JSON.parse(storedQuests));
       if (storedTime) setPracticeTimeSpent(parseInt(storedTime) || 0);
@@ -549,7 +554,7 @@ export default function App() {
                 </button>
                 <button
                   onClick={() => {
-                    playHapticSound('pop');
+                    playHaptic('pop');
                     setShowBhaiGameZone(true);
                   }}
                   className="px-4 py-2 rounded-xl text-xs font-black font-display transition-all cursor-pointer flex items-center gap-1 bg-amber-500/10 text-amber-500 hover:bg-amber-500/20 border-2 border-dashed border-amber-500/30"

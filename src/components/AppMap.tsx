@@ -4,6 +4,7 @@ import { Module, Lesson, SnakeState } from '../types';
 import { SnakeMascot } from './SnakeMascot';
 import { GraphPlayground } from './GraphPlayground';
 import { motion, AnimatePresence } from 'motion/react';
+import { playHaptic } from '../utils/haptics';
 
 interface AppMapProps {
   modules: Module[];

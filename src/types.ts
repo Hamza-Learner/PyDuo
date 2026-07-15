@@ -135,3 +135,68 @@ export type SnakeState =
   | 'thumbs_up'
   | 'streak_fire'
   | 'level_up';
+
+export interface ExerciseHistory {
+  [exerciseId: string]: { attempts: number; lastSolved: string };
+}
+
+// ===== NEW TYPES FOR ENHANCED FEATURES =====
+
+export interface AchievementBadge {
+  id: string;
+  title: string;
+  description: string;
+  icon: string;
+  color: string;
+  condition: 'lessons' | 'xp' | 'streak' | 'hearts' | 'perfect' | 'speed' | 'code_darbar' | 'capstone' | 'all_modules';
+  target: number;
+  xpReward: number;
+  rarity: 'common' | 'rare' | 'epic' | 'legendary';
+}
+
+export interface UserAchievements {
+  earned: Record<string, { earnedAt: string; xpClaimed: boolean }>;
+  progress: Record<string, number>;
+}
+
+export interface CodePattern {
+  id: string;
+  title: string;
+  category: 'loops' | 'functions' | 'data_structures' | 'algorithms' | 'oop' | 'async' | 'testing' | 'patterns';
+  description: string;
+  code: string;
+  explanation: string;
+  tags: string[];
+  difficulty: 'beginner' | 'intermediate' | 'advanced';
+}
+
+export interface SpacedRepetitionCard {
+  id: string; // lessonId or conceptId
+  type: 'lesson' | 'concept' | 'exercise';
+  question: string;
+  answer: string;
+  interval: number; // days
+  easeFactor: number;
+  repetitions: number;
+  nextReview: string; // ISO date
+  lastReviewed: string | null;
+}
+
+export interface WeeklyChallenge {
+  id: string;
+  weekStart: string; // ISO date Monday
+  title: string;
+  description: string;
+  difficulty: 'easy' | 'medium' | 'hard';
+  starterCode: string;
+  tests: { input: string; expectedOutput: string }[];
+  xpReward: number;
+  leaderboard: { userId: string; username: string; score: number; submittedAt: string }[];
+}
+
+export interface UserNotes {
+  [conceptId: string]: {
+    content: string; // Markdown
+    updatedAt: string;
+  };
+}
